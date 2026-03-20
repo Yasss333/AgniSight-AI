@@ -1,0 +1,49 @@
+[2026-03-20 19:30:55] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:30:55] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:32:46] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:32:46] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:33:31] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:33:31] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:33:52] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:33:52] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:34:26] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:34:26] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:34:39] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:34:39] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:35:29] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:35:29] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:35:44] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:35:44] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:36:06] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:36:06] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:36:33] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:36:33] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:39:13] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:39:13] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:39:18] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:39:18] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:41:03] [32minfo[39m: New user registered: operator@test.com (operator)
+[2026-03-20 19:41:15] [32minfo[39m: User logged in: operator@test.com
+[2026-03-20 19:42:13] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:42:13] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:42:37] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:42:37] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:52:21] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:52:21] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:52:30] [32minfo[39m: User logged in: operator@test.com
+[2026-03-20 19:53:32] [32minfo[39m: Session created: 69bd586474017cc4c5c47765 | Batch: BATCH-001 | Operator: operator@test.com
+[2026-03-20 19:55:02] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:55:02] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:55:38] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:55:38] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:58:50] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:58:50] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 19:59:56] [32minfo[39m: Server running on port 5000
+[2026-03-20 19:59:56] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 20:07:56] [32minfo[39m: Video uploaded for session 69bd586474017cc4c5c47765: ..\data\videos\1774017476380-69bd5577997a38370663c05c.mp4
+[2026-03-20 20:10:07] [32minfo[39m: Server running on port 5000
+[2026-03-20 20:10:07] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 20:10:39] [32minfo[39m: Server running on port 5000
+[2026-03-20 20:10:39] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 20:13:16] [32minfo[39m: Server running on port 5000
+[2026-03-20 20:13:16] [32minfo[39m: MongoDB connected: 127.0.0.1
