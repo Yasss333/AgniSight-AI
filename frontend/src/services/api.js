@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from 'axios';
 
 const api = axios.create({
@@ -21,11 +22,47 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Logic handled in AuthContext but we could trigger an event here
       window.dispatchEvent(new Event('auth:unauthorized'));
+=======
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+});
+
+// Attach token to every request automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Auto-refresh if token expired
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    if (error.response?.status === 401) {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        try {
+          const { data } = await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
+            { refreshToken }
+          );
+          localStorage.setItem("accessToken", data.accessToken);
+          error.config.headers.Authorization = `Bearer ${data.accessToken}`;
+          return axios(error.config);
+        } catch {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+      }
+>>>>>>> 621e397 (backdn dn)
     }
     return Promise.reject(error);
   }
 );
 
+<<<<<<< HEAD
 export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
 };
@@ -54,3 +91,6 @@ export const videoAPI = {
 };
 
 export default api;
+=======
+export default api;
+>>>>>>> 621e397 (backdn dn)

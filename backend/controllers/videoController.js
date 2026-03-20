@@ -2,7 +2,7 @@ const path = require("path");
 const Session = require("../models/Session");
 const { runAI } = require("../services/pythonService");
 const logger = require("../utils/logger");
-
+const { sendSMS, makeCall } = require("../services/alertService.js"); // adjust path if needed
 // @route  POST /api/video/upload/:sessionId
 // @access Operator+
 const uploadVideo = async (req, res, next) => {
@@ -37,6 +37,9 @@ const uploadVideo = async (req, res, next) => {
       sessionId: session._id,
       videoPath: req.file.path,
     });
+   console.log("🔥 ALERT BLOCK REACHED");
+await sendSMS("🔥 AgniSight Alert: New video uploaded and processing started.");
+await makeCall("AgniSight Alert. A new packing session video has been uploaded. Please check the dashboard.")
   } catch (error) {
     next(error);
   }

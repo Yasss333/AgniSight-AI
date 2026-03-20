@@ -51,3 +51,107 @@
 [2026-03-20 20:16:10] [32minfo[39m: MongoDB connected: 127.0.0.1
 [2026-03-20 20:16:56] [32minfo[39m: Session stopped: 69bd586474017cc4c5c47765 | Final count: 0
 [2026-03-20 20:17:06] [32minfo[39m: Challan generated: C:\dev\projects\AgniSight-AI\data\reports\challan-69bd586474017cc4c5c47765-1774018026079.pdf
+[2026-03-20 20:46:50] [32minfo[39m: Server running on port 5000
+[2026-03-20 20:46:50] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 20:47:42] [32minfo[39m: Server running on port 5000
+[2026-03-20 20:47:42] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:30:40] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:30:40] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:30:40] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:38:01] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:38:01] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:38:01] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:47:50] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:47:50] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:47:50] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:58:47] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:58:47] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:58:47] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:58:52] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:58:52] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:58:52] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:59:28] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:59:28] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:59:28] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:59:37] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:59:37] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:59:37] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-20 23:59:41] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-20 23:59:41] [32minfo[39m: Server running on port 5000
+[2026-03-20 23:59:41] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:00:23] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:00:23] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:00:23] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:03:28] [32minfo[39m: User logged in: operator@test.com
+[2026-03-21 00:03:39] [32minfo[39m: Session created: 69bd9303f816f615271c0fdf | Batch: TWILIO-TEST | Operator: operator@test.com
+[2026-03-21 00:06:09] [31merror[39m: Multipart: Boundary not found — POST /api/video/upload/69bd9303f816f615271c0fdf
+[2026-03-21 00:11:11] [32minfo[39m: User logged in: operator@test.com
+[2026-03-21 00:19:45] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774032585305-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:25:15] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:25:15] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:25:15] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:25:22] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774032922794-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:25:22] [31merror[39m: sendSMS is not defined — POST /api/video/upload/69bd9303f816f615271c0fdf
+[2026-03-21 00:25:43] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:25:43] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:25:43] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:25:51] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774032951154-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:25:51] [31merror[39m: sendSMS is not defined — POST /api/video/upload/69bd9303f816f615271c0fdf
+[2026-03-21 00:26:55] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:26:55] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:26:55] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:27:02] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033022367-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:27:02] [31merror[39m: sendSMS is not a function — POST /api/video/upload/69bd9303f816f615271c0fdf
+[2026-03-21 00:28:25] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:28:25] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:28:25] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:28:30] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:28:30] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:28:30] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:28:49] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:28:49] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:28:49] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:29:10] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:29:10] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:29:10] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:29:18] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033158495-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:34:07] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:34:07] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:34:07] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:34:54] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033493944-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:35:33] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:35:33] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:35:33] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:35:42] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:35:42] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:35:42] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:35:45] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:35:45] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:35:45] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:35:51] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033551140-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:37:13] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:37:13] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:37:13] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:37:36] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033656493-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:38:08] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:38:08] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:38:08] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:38:15] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:38:15] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:38:15] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:38:32] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:38:32] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:38:32] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:38:35] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033715146-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:41:14] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:41:14] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:41:14] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:41:55] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:41:55] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:41:55] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:42:32] [32minfo[39m: Cron: Video cleanup job scheduled (daily at midnight).
+[2026-03-21 00:42:32] [32minfo[39m: Server running on port 5000
+[2026-03-21 00:42:32] [32minfo[39m: MongoDB connected: 127.0.0.1
+[2026-03-21 00:42:41] [32minfo[39m: Video uploaded for session 69bd9303f816f615271c0fdf: ..\data\videos\1774033961756-69bd5577997a38370663c05c.mp4
+[2026-03-21 00:42:43] [32minfo[39m: SMS sent: SM96d060d2a8c2e1c0a928c98bd95de1be
+[2026-03-21 00:42:43] [32minfo[39m: Call initiated: CAd224b016e113581ca2c009c4209e80c4

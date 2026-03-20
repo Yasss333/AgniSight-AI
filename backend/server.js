@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const { startCronJobs } = require("./services/videoService");
 const cors = require("cors");
 const morgan = require("morgan");
 
@@ -40,6 +41,9 @@ app.use(rateLimiter);
 
 // Connect DB
 connectDB();
+
+//CronJOBS
+startCronJobs();
 
 // Routes
 app.use("/api/auth", authRoutes);
