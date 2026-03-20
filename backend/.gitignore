@@ -1,0 +1,5 @@
+node_modules/
+.env
+data/videos/
+data/snapshots/
+data/outputs/
