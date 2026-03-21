@@ -1,42 +1,15 @@
-<<<<<<< HEAD
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-});
-
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('btp_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Logic handled in AuthContext but we could trigger an event here
-      window.dispatchEvent(new Event('auth:unauthorized'));
-=======
 import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
 });
 
-// Attach token to every request automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Auto-refresh if token expired
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -45,7 +18,7 @@ api.interceptors.response.use(
       if (refreshToken) {
         try {
           const { data } = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
+            `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/auth/refresh`,
             { refreshToken }
           );
           localStorage.setItem("accessToken", data.accessToken);
@@ -56,41 +29,51 @@ api.interceptors.response.use(
           window.location.href = "/login";
         }
       }
->>>>>>> 621e397 (backdn dn)
     }
     return Promise.reject(error);
   }
 );
 
-<<<<<<< HEAD
 export const authAPI = {
-  login: (email, password) => api.post('/auth/login', { email, password }),
+  register: (userData)        => api.post("/auth/register", userData),
+  login:    (email, password) => api.post("/auth/login", { email, password }),
+  refresh:  (refreshToken)    => api.post("/auth/refresh", { refreshToken }),
+  getMe:    ()                => api.get("/auth/me"),
+  logout:   ()                => api.post("/auth/logout"),
 };
 
 export const sessionAPI = {
-  startSession: (params) => api.post('/session/start', params),
-  stopSession: (id) => api.post(`/session/stop/${id}`),
-  getSessions: () => api.get('/session'),
-  getSessionLogs: (id) => api.get(`/session/${id}/logs`),
-};
-
-export const reportAPI = {
-  getReports: () => api.get('/report'),
-  downloadReport: (id) => api.get(`/report/${id}`, { responseType: 'blob' }),
-};
-
-export const exportAPI = {
-  exportCSV: (id) => api.get(`/export/${id}/csv`, { responseType: 'blob' }),
-  exportExcel: (id) => api.get(`/export/${id}/xlsx`, { responseType: 'blob' }),
+  getMySessions: ()     => api.get("/sessions/my"),
+  getAllSessions: ()     => api.get("/sessions"),
+  getById:       (id)   => api.get(`/sessions/${id}`),
+  create:        (data) => api.post("/sessions", data),
+  stopSession:   (id)   => api.patch(`/sessions/${id}/stop`),
+  getLogs:       (id)   => api.get(`/sessions/${id}/logs`),
+  getSnapshots:  (id)   => api.get(`/sessions/${id}/snapshots`),
+  getAnalytics:  (id)   => api.get(`/sessions/${id}/analytics`),
 };
 
 export const videoAPI = {
-  uploadVideo: (formData) => api.post('/video/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  }),
+  upload: (sessionId, videoFile) => {
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    return api.post(`/video/upload/${sessionId}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  process: (sessionId) => api.post(`/video/process/${sessionId}`),
+};
+
+export const reportAPI = {
+  downloadReport: (sessionId) =>
+    api.get(`/report/${sessionId}`, { responseType: "blob" }),
+};
+
+export const exportAPI = {
+  exportCSV:   (sessionId) =>
+    api.get(`/export/${sessionId}/csv`,   { responseType: "blob" }),
+  exportExcel: (sessionId) =>
+    api.get(`/export/${sessionId}/excel`, { responseType: "blob" }),
 };
 
 export default api;
-=======
-export default api;
->>>>>>> 621e397 (backdn dn)
