@@ -9,11 +9,12 @@ import { Dashboard } from './pages/Dashboard';
 import { Sessions } from './pages/Sessions';
 import { Reports } from './pages/Reports';
 import { Analytics } from './pages/Analytics';
-
+import { SessionProvider } from './context/SessionContext';
 const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <SessionProvider>
         <div className="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased">
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -71,6 +72,7 @@ const App = () => {
             />
           </Routes>
         </div>
+        </SessionProvider>
       </BrowserRouter>
     </AuthProvider>
   );

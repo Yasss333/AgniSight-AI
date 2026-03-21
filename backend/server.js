@@ -18,6 +18,7 @@ const sessionRoutes = require("./routes/sessionRoutes");
 const videoRoutes = require("./routes/videoRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const exportRoutes = require("./routes/exportRoutes");
+const challanRoutes = require("./routes/challanRoutes");
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -62,6 +63,7 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/video", videoRoutes);
 app.use("/api/report", reportRoutes);
 app.use("/api/export", exportRoutes);
+app.use("/api/challan", challanRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

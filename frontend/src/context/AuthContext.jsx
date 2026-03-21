@@ -1,15 +1,17 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useRef, useContext } from 'react';
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user,    setUser]    = useState(null);
+  const [token,   setToken]   = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const stopSessionRef = useRef(null);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('accessToken');
-    const savedUser = localStorage.getItem('btp_user');
+    const savedUser  = localStorage.getItem('btp_user');
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
@@ -21,6 +23,10 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, []);
 
+  const registerStopSession = (fn) => {
+    stopSessionRef.current = fn;
+  };
+
   const login = (newToken, newUser) => {
     localStorage.setItem('accessToken', newToken);
     localStorage.setItem('btp_user', JSON.stringify(newUser));
@@ -28,18 +34,30 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    // Stop any active session before logging out
+    if (stopSessionRef.current) {
+      try { await stopSessionRef.current(); } catch (e) {}
+    }
     localStorage.removeItem('accessToken');
     localStorage.removeItem('btp_user');
     localStorage.removeItem('refreshToken');
     setToken(null);
     setUser(null);
+    window.location.href = '/login';
   };
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      token,
+      isAuthenticated: !!user,
+      login,
+      logout,
+      registerStopSession,
+    }}>
       {children}
     </AuthContext.Provider>
   );

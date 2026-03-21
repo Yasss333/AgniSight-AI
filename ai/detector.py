@@ -4,14 +4,14 @@ import numpy as np
 import torch
 import pathlib
 
-# Patch torch.load
+# Patch torch.load BEFORE everything
 _original_torch_load = torch.load
 def _patched_torch_load(f, *args, **kwargs):
     kwargs["weights_only"] = False
     return _original_torch_load(f, *args, **kwargs)
 torch.load = _patched_torch_load
 
-# Fix PosixPath — model was saved on Linux, running on Windows
+# Fix PosixPath - model was saved on Linux, running on Windows
 pathlib.PosixPath = pathlib.WindowsPath
 
 # Add YOLOv5 repo to path
@@ -76,7 +76,11 @@ class BoxDetector:
         detections  = []
         for pred in predictions:
             x1, y1, x2, y2, confidence, cls = pred.tolist()
-            detections.append([x1, y1, x2, y2, float(confidence)])
+            # ═══════════════════════════════════════════════════════════════════════════════
+            # Filter by confidence threshold for better accuracy
+            # ═══════════════════════════════════════════════════════════════════════════════
+            if confidence >= self.conf:
+                detections.append([x1, y1, x2, y2, float(confidence)])
         return detections
 
     def _detect_v8(self, frame):
