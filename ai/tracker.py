@@ -98,12 +98,12 @@ class KalmanBox:
 
 
 class SORTTracker:
-    def __init__(self, max_age=60, min_hits=2, iou_threshold=0.25):
-        self.max_age       = max_age
-        self.min_hits      = min_hits
+    def __init__(self, max_age=10, min_hits=2, iou_threshold=0.3):
+        self.max_age       = max_age       # frames to keep lost track alive
+        self.min_hits      = min_hits      # min hits before track is confirmed
         self.iou_threshold = iou_threshold
         self.trackers      = []
-        KalmanBox.count    = 0           # reset IDs each session
+        KalmanBox.count    = 0             # reset IDs each session
 
     def update(self, detections):
         """

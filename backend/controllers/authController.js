@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const logger = require("../utils/logger");
-const Session = require("../models/Session");
+
 // Generate tokens
 const generateAccessToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -64,10 +64,6 @@ const login = async (req, res, next) => {
         message: "Invalid email or password",
       });
     }
-    await Session.updateMany(
-  { operatorId: user._id, status: "active" },
-  { status: "completed", endedAt: new Date() }
-);
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {

@@ -32,7 +32,6 @@ const io = new Server(httpServer, {
 
 // Make io accessible in routes/controllers
 app.set("io", io);
-app.use("/data/outputs", express.static(path.resolve("../data/outputs")));
 app.use("/data/snapshots", express.static(path.resolve("../data/snapshots")));
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
