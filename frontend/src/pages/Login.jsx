@@ -53,7 +53,7 @@ export const Login = () => {
       <div className="w-full max-w-sm p-6 space-y-6 bg-card rounded-lg border border-border shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-2xl flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">AS</span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight">AgniSight</h1>
@@ -107,7 +107,7 @@ export const Login = () => {
                 key={demo.email}
                 type="button"
                 onClick={() => handleDemoLogin(demo.email)}
-                className="w-full p-2 text-xs text-left rounded border border-input hover:bg-secondary transition-colors"
+                className="w-full p-2 text-xs text-left rounded-xl border border-input hover:bg-secondary transition-colors"
               >
                 <div className="font-medium text-foreground">{demo.email}</div>
                 <div className="text-muted-foreground">Password: {demo.password} • Role: {demo.role}</div>

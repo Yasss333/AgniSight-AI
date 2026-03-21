@@ -17,7 +17,7 @@ export const Navbar = () => {
     <div className="border-b border-border bg-card shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
       <div className="flex h-14 items-center px-4 container mx-auto">
         <div className="flex items-center space-x-2 mr-6">
-          <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-2xl flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">AS</span>
           </div>
           <span className="font-semibold hidden sm:inline-block text-foreground">AgniSight</span>

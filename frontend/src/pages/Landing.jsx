@@ -67,7 +67,7 @@ export const Landing = () => {
       <nav className="sticky top-0 z-40 border-b border-border bg-card">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-2xl flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">AS</span>
             </div>
             <span className="font-semibold text-foreground hidden sm:inline-block">AgniSight</span>

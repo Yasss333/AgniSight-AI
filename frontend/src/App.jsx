@@ -29,7 +29,7 @@ const App = () => {
                       <header className="flex h-12 items-center gap-2 border-b border-border bg-card px-4 md:hidden">
                         <SidebarTrigger className="-ml-1" />
                         <div className="flex items-center gap-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-primary text-xs font-bold text-primary-foreground">
                             AS
                           </div>
                           <span className="text-sm font-semibold">AgniSight</span>

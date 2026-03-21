@@ -57,7 +57,7 @@ export function AppSidebar() {
     >
       <SidebarHeader className="px-3 py-4">
         <div className="flex w-full items-center gap-2 group-data-[state=collapsed]:justify-center">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold tracking-tight">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-xs font-bold tracking-tight">
             AS
           </div>
           <div className="flex flex-col leading-none group-data-[state=collapsed]:hidden">
