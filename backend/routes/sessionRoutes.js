@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { checkSpike, checkNoActivity, recordActivity } = require("../services/alertService.js");
+const { checkSpike, checkNoActivity, recordActivity, sendSMS, makeCall } = require("../services/alertService.js");
 const {
   createSession,
   stopSession,
@@ -25,6 +25,24 @@ router.patch("/:id/stop", stopSession);
 router.get("/:id/logs",       getSessionLogs);
 router.get("/:id/snapshots",  getSessionSnapshots);
 router.get("/:id/analytics",  getSessionAnalytics);
+// Manual alert from dashboard (Twilio)
+router.post("/:id/alert", restrictTo("manager", "admin"), async (req, res, next) => {
+  try {
+    const { type = "call", message } = req.body || {};
+    const sessionId = req.params.id;
+    const defaultMessage = `AgniSight Alert. Manual alert triggered from dashboard for session ${sessionId}. Please check the dashboard.`;
+
+    if (type === "call") {
+      await makeCall(message || defaultMessage);
+      return res.json({ success: true, message: "Call alert sent" });
+    }
+
+    await sendSMS(message || defaultMessage);
+    return res.json({ success: true, message: "SMS alert sent" });
+  } catch (err) {
+    return next(err);
+  }
+});
 // ── TEMP TEST ROUTE — remove before final submission ──
 
 router.post("/test-alert/:id", protect, async (req, res) => {

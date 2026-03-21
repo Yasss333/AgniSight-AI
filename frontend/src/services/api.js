@@ -51,6 +51,7 @@ export const sessionAPI = {
   getLogs:       (id)   => api.get(`/sessions/${id}/logs`),
   getSnapshots:  (id)   => api.get(`/sessions/${id}/snapshots`),
   getAnalytics:  (id)   => api.get(`/sessions/${id}/analytics`),
+  sendAlert:     (id, data) => api.post(`/sessions/${id}/alert`, data),
 };
 
 export const videoAPI = {

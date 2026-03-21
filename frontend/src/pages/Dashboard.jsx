@@ -5,6 +5,7 @@ import { SnapshotGrid } from '../components/SnapshotGrid';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { AlertBanner } from '../components/AlertBanner';
 import { useSession } from '../hooks/useSession';
+import { Button } from '../components/ui/button';
 
 export const Dashboard = () => {
   const {
@@ -17,7 +18,9 @@ export const Dashboard = () => {
     videoSrc,
     startSession,
     stopSession,
-    dismissAlert
+    dismissAlert,
+    sendAlert,
+    isSendingAlert
   } = useSession();
 
   const videoRef = useRef(null);
@@ -32,6 +35,13 @@ export const Dashboard = () => {
       
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Live Dashboard</h1>
+        <Button
+          variant="destructive"
+          onClick={() => sendAlert("call")}
+          disabled={!isRunning || isSendingAlert}
+        >
+          {isSendingAlert ? "Sending Alert..." : "Send Alert"}
+        </Button>
       </div>
       
       <div className="flex-1 flex flex-col xl:flex-row gap-4 overflow-hidden">

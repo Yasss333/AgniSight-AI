@@ -11,6 +11,7 @@ export const useSession = () => {
   const [alerts,     setAlerts]     = useState([]);
   const [videoSrc,   setVideoSrc]   = useState(null);
   const [elapsed,    setElapsed]    = useState(0);
+  const [isSendingAlert, setIsSendingAlert] = useState(false);
 
   // Elapsed timer
   useEffect(() => {
@@ -139,10 +140,23 @@ export const useSession = () => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   };
 
+  const sendAlert = async (type = "call", message) => {
+    if (!sessionId) return;
+    setIsSendingAlert(true);
+    try {
+      await sessionAPI.sendAlert(sessionId, { type, message });
+    } catch (err) {
+      console.error("Failed to send alert:", err);
+    } finally {
+      setIsSendingAlert(false);
+    }
+  };
+
   return {
     count, fps, elapsed,
     isRunning, snapshots, alerts,
     sessionId, videoSrc,
     startSession, stopSession, dismissAlert,
+    sendAlert, isSendingAlert,
   };
 };
