@@ -78,10 +78,10 @@ export const SessionProvider = ({ children }) => {
         socket.disconnect();
       });
 
-      // Handle processing stopped event (when user stops video)
-      socket.on("processing_stopped", (data) => {
+      socket.on("processing_stopped", () => {
         setIsRunning(false);
-        console.log("Processing stopped:", data.message);
+        socket.emit("leave_session", newSessionId);
+        socket.disconnect();
       });
 
       socket.on("processing_error", (data) => {
@@ -106,12 +106,8 @@ export const SessionProvider = ({ children }) => {
   const stopSession = async () => {
     if (!sessionId) return;
     try {
-      // Stop the AI processing first (kills Python process)
       await videoAPI.stop(sessionId);
-      
-      // Then stop the session in database
       await sessionAPI.stopSession(sessionId);
-      
       setIsRunning(false);
       socket.emit("leave_session", sessionId);
       socket.disconnect();
@@ -119,6 +115,8 @@ export const SessionProvider = ({ children }) => {
     } catch (err) {
       console.error("Failed to stop session:", err);
       setIsRunning(false);
+      socket.disconnect();
+      setSessionId(null);
     }
   };
 
