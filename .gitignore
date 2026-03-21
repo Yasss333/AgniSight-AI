@@ -1,0 +1,25 @@
+﻿# Python cache
+ai/__pycache__/
+*.pyc
+
+# Virtual env
+ai/venv/
+
+# Runtime data - never commit these
+data/
+data/videos/
+data/outputs/
+data/snapshots/
+data/reports/
+
+# Test files
+ai/test_load.py
+
+# Logs
+backend/logs/
+
+# Model file (too large for git)
+ai/models/*.pt
+
+# YOLOv5 repo (cloned separately)
+ai/yolov5_repo/
