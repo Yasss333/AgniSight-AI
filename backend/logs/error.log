@@ -296,3 +296,4 @@ ModuleNotFoundError: No module named 'models.yolo'
 [2026-03-21 03:44:37] [31merror[39m: AI stderr: C:\dev\projects\AgniSight-AI\ai\main.py:104: DeprecationWarning: Conversion of an array with ndim > 0 to a scalar is deprecated, and will error in future. Ensure you extract a single element from your array before performing this operation. (Deprecated NumPy 1.25.)
   {"trackId": int(t[4]), "bbox": [float(t[0]), float(t[1]), float(t[2]), float(t[3])]}
 
+[2026-03-21 10:40:28] [31merror[39m: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
