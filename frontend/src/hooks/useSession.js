@@ -1,54 +1,50 @@
-import { useState, useEffect, useRef } from 'react';
-import { useAuth } from './useAuth';
+import { useState, useEffect } from 'react';
 import { sessionAPI, videoAPI } from '../services/api';
+import socket from '../services/socket';
 
 export const useSession = () => {
-  const { token } = useAuth();
-  const [count, setCount] = useState(0);
-  const [fps, setFps] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [sessionId, setSessionId] = useState(null);
-  const [snapshots, setSnapshots] = useState([]);
-  const [alerts, setAlerts] = useState([]);
-  const [videoSrc, setVideoSrc] = useState(null);
-  const eventSourceRef = useRef(null);
-  const startTimerRef = useRef(null);
-  const [elapsed, setElapsed] = useState(0);
+  const [count,      setCount]      = useState(0);
+  const [fps,        setFps]        = useState(0);
+  const [isRunning,  setIsRunning]  = useState(false);
+  const [sessionId,  setSessionId]  = useState(null);
+  const [snapshots,  setSnapshots]  = useState([]);
+  const [alerts,     setAlerts]     = useState([]);
+  const [videoSrc,   setVideoSrc]   = useState(null);
+  const [elapsed,    setElapsed]    = useState(0);
 
+  // Elapsed timer
   useEffect(() => {
     let interval;
     if (isRunning) {
-      interval = setInterval(() => {
-        setElapsed((prev) => prev + 1);
-      }, 1000);
-    } else {
-      clearInterval(interval);
+      interval = setInterval(() => setElapsed((p) => p + 1), 1000);
     }
     return () => clearInterval(interval);
   }, [isRunning]);
 
+  // Cleanup socket on unmount
   useEffect(() => {
     return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      if (socket.connected) socket.disconnect();
     };
   }, []);
 
   const startSession = async ({ conf, iou, file }) => {
     try {
-      // 1. Upload video
-      const formData = new FormData();
-      formData.append('video', file);
-      const uploadRes = await videoAPI.uploadVideo(formData);
-      const videoPath = uploadRes.data.path;
-      setVideoSrc(`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${videoPath}`);
-
-      // 2. Start session
-      const res = await sessionAPI.startSession({ conf, iou, videoPath });
-      const newSessionId = res.data.sessionId;
-      
+      // 1. Create session
+      const createRes = await sessionAPI.create({
+        batchId:           `BATCH-${Date.now()}`,
+        yoloConfThreshold: conf || 0.5,
+        yoloIouThreshold:  iou  || 0.45,
+      });
+      const newSessionId = createRes.data.session._id;
       setSessionId(newSessionId);
+
+      // 2. Upload video ONCE and set video source
+      const uploadRes = await videoAPI.upload(newSessionId, file);
+      const filename  = uploadRes.data.videoPath.split(/[/\\]/).pop();
+      setVideoSrc(`http://localhost:5000/data/videos/${filename}`);
+
+      // 3. Reset state (AFTER setting videoSrc — don't null it out)
       setIsRunning(true);
       setElapsed(0);
       setCount(0);
@@ -56,50 +52,69 @@ export const useSession = () => {
       setSnapshots([]);
       setAlerts([]);
 
-      // 3. Connect SSE
-      const sseUrl = `${import.meta.env.VITE_SSE_BASE_URL}/video/stream/${newSessionId}?token=${token}`;
-      eventSourceRef.current = new EventSource(sseUrl);
+      // 4. Start AI processing
+      await videoAPI.process(newSessionId);
 
-      eventSourceRef.current.addEventListener('count_update', (e) => {
-        const data = JSON.parse(e.data);
+      // 5. Clean up old listeners BEFORE adding new ones
+      socket.off("count_update");
+      socket.off("snapshot_taken");
+      socket.off("alert");
+      socket.off("processing_done");
+      socket.off("processing_error");
+      socket.off("connect_error");
+
+      // 6. Connect socket + join room
+      socket.connect();
+      socket.emit("join_session", newSessionId);
+
+      // 7. Add fresh listeners
+      socket.on("count_update", (data) => {
         setCount(data.count);
         setFps(data.fps);
       });
 
-      eventSourceRef.current.addEventListener('snapshot', (e) => {
-        const data = JSON.parse(e.data);
-        setSnapshots((prev) => {
-          const updated = [data, ...prev];
-          const max = parseInt(import.meta.env.VITE_MAX_SNAPSHOTS || '12', 10);
-          return updated.slice(0, max);
-        });
+      socket.on("snapshot_taken", (data) => {
+        setSnapshots((prev) => [{
+          ...data,
+          prevCount: data.previousCount || data.prev_count || 0,
+          newCount:  data.new_count     || data.newCount   || 0,
+          imagePath: data.imagePath     || data.image_path || '',
+          timestamp: data.timestamp     || new Date(),
+        }, ...prev].slice(0, 12));
       });
 
-      eventSourceRef.current.addEventListener('anomaly_alert', (e) => {
-        const data = JSON.parse(e.data);
-        setAlerts((prev) => [...prev, data]);
+      socket.on("alert", (data) => {
+        setAlerts((prev) => [...prev, { ...data, id: Date.now() }]);
       });
 
-      eventSourceRef.current.addEventListener('session_end', (e) => {
-        const data = JSON.parse(e.data);
+      socket.on("processing_done", () => {
         setIsRunning(false);
-        if (eventSourceRef.current) {
-          eventSourceRef.current.close();
-        }
+        socket.emit("leave_session", newSessionId);
+        socket.disconnect();
       });
 
-      eventSourceRef.current.onerror = (err) => {
-        console.error('SSE Error', err);
-        // Retries could be implemented here
-      };
+      socket.on("processing_error", (data) => {
+        console.error("Processing error:", data.message);
+        setIsRunning(false);
+        socket.disconnect();
+      });
+
+      socket.on("connect_error", (err) => {
+        console.error("Socket connection error:", err);
+      });
 
     } catch (err) {
-      console.error('Failed to start session', err);
+      console.error("Failed to start session:", err);
+      // Auto-stop stuck active session
+      if (err.response?.status === 400 && err.response?.data?.activeSessionId) {
+        try {
+          await sessionAPI.stopSession(err.response.data.activeSessionId);
+        } catch (stopErr) {
+          console.error("Failed to stop stuck session:", stopErr);
+        }
+      }
+      setIsRunning(false);
     }
-  };
-
-  const dismissAlert = (id) => {
-    setAlerts((prev) => prev.filter(a => a.id !== id));
   };
 
   const stopSession = async () => {
@@ -107,25 +122,21 @@ export const useSession = () => {
     try {
       await sessionAPI.stopSession(sessionId);
       setIsRunning(false);
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      socket.emit("leave_session", sessionId);
+      socket.disconnect();
     } catch (err) {
-      console.error('Failed to stop session', err);
+      console.error("Failed to stop session:", err);
     }
   };
 
+  const dismissAlert = (id) => {
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  };
+
   return {
-    count,
-    fps,
-    elapsed,
-    isRunning,
-    snapshots,
-    alerts,
-    sessionId,
-    videoSrc,
-    startSession,
-    stopSession,
-    dismissAlert
+    count, fps, elapsed,
+    isRunning, snapshots, alerts,
+    sessionId, videoSrc,
+    startSession, stopSession, dismissAlert,
   };
 };

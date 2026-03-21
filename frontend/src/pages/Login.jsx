@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { authAPI } from '../services/api';
 import { Button } from '../components/ui/button';
@@ -19,6 +20,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleDemoLogin = (demoEmail) => {
     const demo = DEMO_CREDENTIALS.find(d => d.email === demoEmail);
@@ -35,24 +37,12 @@ export const Login = () => {
     
     try {
       const response = await authAPI.login(email, password);
-      login(response.data.token, response.data.user);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+      login(response.data.accessToken, response.data.user);
       const from = location.state?.from?.pathname || '/dashboard';
       navigate(from, { replace: true });
     } catch (err) {
-      // Fallback to mock login with demo credentials
-      const demoUser = DEMO_CREDENTIALS.find(d => d.email === email && d.password === password);
-      if (demoUser) {
-        const mockToken = btoa(`${demoUser.email}:${Date.now()}`);
-        login(mockToken, {
-          email: demoUser.email,
-          name: demoUser.name,
-          role: demoUser.role,
-        });
-        const from = location.state?.from?.pathname || '/dashboard';
-        navigate(from, { replace: true });
-      } else {
-        setError(err.response?.data?.message || 'Login failed. Please check credentials.');
-      }
+      setError(err.response?.data?.message || 'Login failed. Please check credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -87,13 +77,22 @@ export const Login = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}

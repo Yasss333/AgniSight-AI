@@ -36,11 +36,11 @@ export const Analytics = () => {
 
   const fetchSessions = async () => {
     try {
-      const res = await sessionAPI.getSessions();
-      setSessions(res.data || []);
-      if (res.data?.length > 0) {
-        setSelectedSessionId(res.data[0].id);
-      }
+      const res = await sessionAPI.getMySessions();
+      setSessions(res.data.sessions || []);
+      if (res.data?.sessions?.length > 0) {
+       setSelectedSessionId(res.data.sessions[0]._id);  // ✅
+        }
     } catch (err) {
       console.error('Failed to fetch sessions', err);
     } finally {
@@ -49,18 +49,18 @@ export const Analytics = () => {
   };
 
   const fetchLogs = async (id) => {
-    try {
-      const res = await sessionAPI.getSessionLogs(id);
-      setLogs(res.data.logs || []);
-      const session = sessions.find(s => s.id === id);
-      if (session?.videoPath) {
-        setVideoSrc(`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${session.videoPath}`);
-      }
-    } catch (err) {
-      console.error('Failed to fetch logs', err);
+  try {
+    const res = await sessionAPI.getLogs(id);    // ← use getLogs not getSessionLogs
+    setLogs(res.data.logs || []);
+    const session = sessions.find(s => s._id === id);
+    if (session?.videoPath) {
+      const filename = session.videoPath.split(/[/\\]/).pop();
+      setVideoSrc(`http://localhost:5000/data/videos/${filename}`);
     }
-  };
-
+  } catch (err) {
+    console.error('Failed to fetch logs', err);
+  }
+};
   const chartData = transformLogsToChartData(logs);
   const stats = computeSummaryStats(logs);
 
@@ -87,7 +87,7 @@ export const Analytics = () => {
             <SelectContent>
               {sessions.map(s => (
                 <SelectItem key={s.id} value={s.id}>
-                  {s.batchId || s.id.slice(0, 8)} - {new Date(s.createdAt).toLocaleDateString()}
+                  {s.batchId || s._id.slice(0, 8)} - {new Date(s.createdAt).toLocaleDateString()}
                 </SelectItem>
               ))}
             </SelectContent>

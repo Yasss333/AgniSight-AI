@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('btp_token');
+    const savedToken = localStorage.getItem('accessToken');
     const savedUser = localStorage.getItem('btp_user');
     if (savedToken && savedUser) {
       setToken(savedToken);
@@ -22,15 +22,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (newToken, newUser) => {
-    localStorage.setItem('btp_token', newToken);
+    localStorage.setItem('accessToken', newToken);
     localStorage.setItem('btp_user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = () => {
-    localStorage.removeItem('btp_token');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('btp_user');
+    localStorage.removeItem('refreshToken');
     setToken(null);
     setUser(null);
   };

@@ -18,6 +18,7 @@ const createSession = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "You already have an active session. Stop it before starting a new one.",
+            activeSessionId: existing._id,  // ← add this
       });
     }
 
@@ -35,6 +36,9 @@ const createSession = async (req, res, next) => {
       message: "Session created successfully",
       session,
     });
+   
+
+
   } catch (error) {
     next(error);
   }
@@ -197,7 +201,11 @@ const getSessionSnapshots = async (req, res, next) => {
 // @access Operator+
 const getSessionAnalytics = async (req, res, next) => {
   try {
-    const session = await Session.findById(req.params.id);
+    const sessions = await Session.find({ operatorId: req.user._id })
+  .populate("operatorId", "name email role")  // ← add this
+  .sort({ createdAt: -1 })
+  .skip(skip)
+  .limit(limit);
     if (!session) {
       return res.status(404).json({ success: false, message: "Session not found" });
     }

@@ -13,6 +13,8 @@ export const VideoPlayer = forwardRef(({ src, isLive, isBuffering }, ref) => {
           src={src}
           className="w-full h-full object-contain"
           controls
+           autoPlay        // ← add this
+           muted 
           crossOrigin="anonymous"
           playsInline
         />

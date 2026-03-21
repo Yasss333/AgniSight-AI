@@ -9,6 +9,8 @@ const runAI = (sessionId, videoPath, params, io) => {
   return new Promise((resolve, reject) => {
     const pythonPath = process.env.PYTHON_PATH || "python";
     const scriptPath = path.resolve(process.env.AI_SCRIPT_PATH || "../ai/main.py");
+    const modelPath  = path.resolve(process.env.AI_MODEL_PATH  || "../ai/models/yolov8n.pt")
+
 
     const args = [
       scriptPath,
@@ -18,6 +20,7 @@ const runAI = (sessionId, videoPath, params, io) => {
       "--iou", params.yoloIouThreshold.toString(),
       "--snapshot_dir", path.resolve(process.env.SNAPSHOT_DIR || "../data/snapshots"),
       "--output_dir", path.resolve(process.env.OUTPUT_DIR || "../data/outputs"),
+        "--model",        modelPath,    
     ];
 
     logger.info(`Spawning AI process: ${pythonPath} ${args.join(" ")}`);
@@ -74,7 +77,7 @@ const runAI = (sessionId, videoPath, params, io) => {
               frame: parsed.frame,
               previousCount: parsed.prev_count,
               newCount: parsed.new_count,
-              imagePath: parsed.image_path,
+              imageUrl: `/snapshots/${path.basename(parsed.image_path)}`,
             });
 
             logger.info(`Snapshot saved: frame ${parsed.frame} | ${parsed.prev_count} → ${parsed.new_count}`);
