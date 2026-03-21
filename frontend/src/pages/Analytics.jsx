@@ -60,6 +60,7 @@ export const Analytics = () => {
   };
 
   const fetchLogs = async (id) => {
+    if (!id) return;
     try {
       const res = await sessionAPI.getLogs(id);
       setLogs(res.data.logs || []);
@@ -70,6 +71,7 @@ export const Analytics = () => {
       }
     } catch (err) {
       console.error('Failed to fetch logs', err);
+      setLogs([]);
     }
   };
 
@@ -82,6 +84,20 @@ export const Analytics = () => {
         <Skeleton className="h-10 w-64 mb-6" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-[400px] w-full" />
+      </div>
+    );
+  }
+
+  if (!sessions || sessions.length === 0) {
+    return (
+      <div className="container mx-auto p-4 space-y-6">
+        <h1 className="text-2xl font-bold tracking-tight">Analytics Dashboard</h1>
+        <div className="flex items-center justify-center h-96 rounded-lg border border-dashed">
+          <div className="text-center">
+            <p className="text-lg font-medium text-muted-foreground">No sessions found</p>
+            <p className="text-sm text-muted-foreground mt-2">Start a new session to view analytics</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -116,7 +132,6 @@ export const Analytics = () => {
         <div className="lg:col-span-2">
           <CountChart data={chartData} onPointClick={seekToTimestamp} />
         </div>
-
         <div className="bg-muted rounded-lg border overflow-hidden flex flex-col">
           <div className="p-3 border-b bg-card">
             <h3 className="text-sm font-medium">Session Playback</h3>
