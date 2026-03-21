@@ -1,6 +1,7 @@
 const path = require("path");
 const Session = require("../models/Session");
-const { runAI } = require("../services/pythonService");
+const Log = require("../models/Log");
+const { runAI, stopAI } = require("../services/pythonService");
 const logger = require("../utils/logger");
 // const { sendSMS, makeCall } = require("../services/alertService.js"); // adjust path if needed
 // @route  POST /api/video/upload/:sessionId
@@ -92,4 +93,52 @@ const processVideo = async (req, res, next) => {
   }
 };
 
-module.exports = { uploadVideo, processVideo };
+// @route  POST /api/video/stop/:sessionId
+// @access Operator+
+// @desc   Stop AI processing for a session immediately
+const stopProcessing = async (req, res, next) => {
+  try {
+    const session = await Session.findById(req.params.sessionId);
+
+    if (!session) {
+      return res.status(404).json({ success: false, message: "Session not found" });
+    }
+
+    if (session.operatorId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    if (session.status !== "active") {
+      return res.status(400).json({ success: false, message: "Session is not active" });
+    }
+
+    const io = req.app.get("io");
+    const stopped = await stopAI(session._id, io);
+
+    if (!stopped) {
+      logger.warn(`No active AI process to stop for session ${session._id}`);
+    }
+
+    // Get final count from latest log
+    const lastLog = await Log.findOne({ sessionId: session._id }).sort({ frameNumber: -1 });
+    const finalCount = lastLog ? lastLog.boxCount : session.finalBoxCount || 0;
+
+    // Update session status
+    session.status = "paused";
+    session.finalBoxCount = finalCount;
+    await session.save();
+
+    logger.info(`Video processing stopped for session ${session._id}`);
+
+    res.status(200).json({
+      success: true,
+      message: "Processing stopped",
+      sessionId: session._id,
+      finalCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { uploadVideo, processVideo, stopProcessing };

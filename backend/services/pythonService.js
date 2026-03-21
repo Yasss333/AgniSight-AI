@@ -5,11 +5,16 @@ const Snapshot = require("../models/Snapshot");
 const Session = require("../models/Session");
 const logger = require("../utils/logger");
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// Global map to store active AI processes by session ID
+// ═══════════════════════════════════════════════════════════════════════════════
+const activeProcesses = new Map();
+
 const runAI = (sessionId, videoPath, params, io) => {
   return new Promise((resolve, reject) => {
     const pythonPath = process.env.PYTHON_PATH || "python";
     const scriptPath = path.resolve(process.env.AI_SCRIPT_PATH || "../ai/main.py");
-    const modelPath  = path.resolve(process.env.AI_MODEL_PATH  || "../ai/models/yolov8n.pt")
+    const modelPath  = path.resolve(process.env.AI_MODEL_PATH  || "../ai/models/box_detection.pt")
 
 
     const args = [
@@ -26,6 +31,11 @@ const runAI = (sessionId, videoPath, params, io) => {
     logger.info(`Spawning AI process: ${pythonPath} ${args.join(" ")}`);
 
     const py = spawn(pythonPath, args);
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // Store process reference for later termination
+    // ═══════════════════════════════════════════════════════════════════════════════
+    activeProcesses.set(sessionId.toString(), py);
 
     let buffer = "";
 
@@ -110,8 +120,17 @@ const runAI = (sessionId, videoPath, params, io) => {
     });
 
     py.on("close", (code) => {
+      // ═══════════════════════════════════════════════════════════════════════════════
+      // Clean up process reference
+      // ═══════════════════════════════════════════════════════════════════════════════
+      activeProcesses.delete(sessionId.toString());
+
       if (code === 0) {
         logger.info(`AI process exited cleanly for session ${sessionId}`);
+        resolve();
+      } else if (code === null) {
+        // Process was killed (e.g., by SIGTERM)
+        logger.info(`AI process was terminated for session ${sessionId}`);
         resolve();
       } else {
         logger.error(`AI process crashed with code ${code} for session ${sessionId}`);
@@ -126,9 +145,59 @@ const runAI = (sessionId, videoPath, params, io) => {
 
     py.on("error", (err) => {
       logger.error(`Failed to spawn AI process: ${err.message}`);
+      activeProcesses.delete(sessionId.toString());
       reject(err);
     });
   });
 };
 
-module.exports = { runAI };
+// ═══════════════════════════════════════════════════════════════════════════════
+// Stop AI processing for a session
+// Kills the Python process and emits stop event
+// ═══════════════════════════════════════════════════════════════════════════════
+const stopAI = async (sessionId, io) => {
+  const sessionIdStr = sessionId.toString();
+  
+  if (!activeProcesses.has(sessionIdStr)) {
+    logger.warn(`No active AI process found for session ${sessionId}`);
+    return false;
+  }
+
+  const py = activeProcesses.get(sessionIdStr);
+  
+  try {
+    // Kill the process tree (child processes and parent)
+    // On Windows, use SIGKILL; on Linux, use SIGTERM then SIGKILL
+    if (process.platform === "win32") {
+      // Windows: kill process tree
+      require("child_process").exec(`taskkill /PID ${py.pid} /T /F`);
+    } else {
+      // Unix: try SIGTERM first, then SIGKILL
+      py.kill("SIGTERM");
+      setTimeout(() => {
+        if (!py.killed) {
+          py.kill("SIGKILL");
+        }
+      }, 500);
+    }
+
+    activeProcesses.delete(sessionIdStr);
+    logger.info(`AI process stopped for session ${sessionId}`);
+
+    // Notify connected clients
+    if (io) {
+      io.to(sessionIdStr).emit("processing_stopped", {
+        sessionId,
+        message: "AI processing stopped by user",
+      });
+    }
+
+    return true;
+  } catch (err) {
+    logger.error(`Failed to stop AI process for session ${sessionId}: ${err.message}`);
+    activeProcesses.delete(sessionIdStr);
+    return false;
+  }
+};
+
+module.exports = { runAI, stopAI };

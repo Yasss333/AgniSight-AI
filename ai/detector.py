@@ -76,7 +76,11 @@ class BoxDetector:
         detections  = []
         for pred in predictions:
             x1, y1, x2, y2, confidence, cls = pred.tolist()
-            detections.append([x1, y1, x2, y2, float(confidence)])
+            # ═══════════════════════════════════════════════════════════════════════════════
+            # Filter by confidence threshold for better accuracy
+            # ═══════════════════════════════════════════════════════════════════════════════
+            if confidence >= self.conf:
+                detections.append([x1, y1, x2, y2, float(confidence)])
         return detections
 
     def _detect_v8(self, frame):

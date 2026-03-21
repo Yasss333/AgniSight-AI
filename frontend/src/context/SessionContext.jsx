@@ -11,7 +11,6 @@ export const SessionProvider = ({ children }) => {
   const [fps,        setFps]        = useState(0);
   const [isRunning,  setIsRunning]  = useState(false);
   const [sessionId,  setSessionId]  = useState(null);
-  const [snapshots,  setSnapshots]  = useState([]);
   const [alerts,     setAlerts]     = useState([]);
   const [videoSrc,   setVideoSrc]   = useState(null);
   const [elapsed,    setElapsed]    = useState(0);
@@ -47,16 +46,15 @@ export const SessionProvider = ({ children }) => {
       setElapsed(0);
       setCount(0);
       setFps(0);
-      setSnapshots([]);
       setAlerts([]);
 
       await videoAPI.process(newSessionId);
 
       socket.off("count_update");
-      socket.off("snapshot_taken");
       socket.off("alert");
       socket.off("processing_done");
       socket.off("processing_error");
+      socket.off("processing_stopped");
 
       socket.connect();
       socket.emit("join_session", newSessionId);
@@ -64,17 +62,6 @@ export const SessionProvider = ({ children }) => {
       socket.on("count_update", (data) => {
         setCount(data.count);
         setFps(data.fps);
-      });
-
-      socket.on("snapshot_taken", (data) => {
-        setSnapshots((prev) => [{
-          ...data,
-          id:        `${data.frame}-${Date.now()}`,
-          prevCount: data.previousCount || data.prev_count || 0,
-          newCount:  data.new_count     || data.newCount   || 0,
-          imagePath: data.imagePath     || data.image_path || '',
-          timestamp: data.timestamp     || new Date(),
-        }, ...prev].slice(0, 12));
       });
 
       socket.on("alert", (data) => {
@@ -89,6 +76,12 @@ export const SessionProvider = ({ children }) => {
         }
         socket.emit("leave_session", newSessionId);
         socket.disconnect();
+      });
+
+      // Handle processing stopped event (when user stops video)
+      socket.on("processing_stopped", (data) => {
+        setIsRunning(false);
+        console.log("Processing stopped:", data.message);
       });
 
       socket.on("processing_error", (data) => {
@@ -113,13 +106,19 @@ export const SessionProvider = ({ children }) => {
   const stopSession = async () => {
     if (!sessionId) return;
     try {
+      // Stop the AI processing first (kills Python process)
+      await videoAPI.stop(sessionId);
+      
+      // Then stop the session in database
       await sessionAPI.stopSession(sessionId);
+      
       setIsRunning(false);
       socket.emit("leave_session", sessionId);
       socket.disconnect();
       setSessionId(null);
     } catch (err) {
       console.error("Failed to stop session:", err);
+      setIsRunning(false);
     }
   };
 
@@ -145,7 +144,7 @@ export const SessionProvider = ({ children }) => {
   return (
     <SessionContext.Provider value={{
       count, fps, elapsed,
-      isRunning, snapshots, alerts,
+      isRunning, alerts,
       sessionId, videoSrc,
       videoRef, videoPlaybackTime,
       startSession, stopSession, dismissAlert,

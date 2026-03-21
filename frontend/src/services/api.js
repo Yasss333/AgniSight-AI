@@ -63,6 +63,7 @@ export const videoAPI = {
     });
   },
   process: (sessionId) => api.post(`/video/process/${sessionId}`),
+  stop: (sessionId) => api.post(`/video/stop/${sessionId}`),
 };
 
 export const reportAPI = {
@@ -75,6 +76,15 @@ export const exportAPI = {
     api.get(`/export/${sessionId}/csv`,   { responseType: "blob" }),
   exportExcel: (sessionId) =>
     api.get(`/export/${sessionId}/excel`, { responseType: "blob" }),
+};
+
+export const challanAPI = {
+  create:    (data)     => api.post("/challan", data),
+  list:      (page = 1, limit = 20) => api.get("/challan", { params: { page, limit } }),
+  getById:   (id)       => api.get(`/challan/${id}`),
+  update:    (id, data) => api.put(`/challan/${id}`, data),
+  delete:    (id)       => api.delete(`/challan/${id}`),
+  exportJSON: (id)      => api.get(`/challan/${id}/export`),
 };
 
 export default api;

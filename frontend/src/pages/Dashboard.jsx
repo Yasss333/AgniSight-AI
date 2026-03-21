@@ -1,7 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { CountOverlay } from '../components/CountOverlay';
 import { SessionControls } from '../components/SessionControls';
-import { SnapshotGrid } from '../components/SnapshotGrid';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { AlertBanner } from '../components/AlertBanner';
 import { useSession } from '../hooks/useSession';
@@ -12,12 +11,13 @@ export const Dashboard = () => {
     fps,
     elapsed,
     isRunning,
-    snapshots,
     alerts,
     videoSrc,
     startSession,
     stopSession,
     dismissAlert,
+    setVideoRef,
+    updateVideoPlaybackTime,
   } = useSession();
 
   const videoRef = useRef(null);
@@ -34,8 +34,8 @@ export const Dashboard = () => {
         <h1 className="text-2xl font-bold tracking-tight">Live Dashboard</h1>
       </div>
       
-      <div className="flex-1 flex flex-col xl:flex-row gap-4 overflow-hidden">
-        <div className="flex-[2] bg-muted rounded-lg border relative overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 bg-muted rounded-lg border relative overflow-hidden">
           <VideoPlayer 
             ref={videoRef}
             src={videoSrc}
@@ -45,10 +45,6 @@ export const Dashboard = () => {
           {isRunning && (
             <CountOverlay count={count} fps={fps} elapsed={elapsed} />
           )}
-        </div>
-
-        <div className="flex-1 min-w-[300px] h-full overflow-hidden">
-          <SnapshotGrid snapshots={snapshots} />
         </div>
       </div>
 
